@@ -133,6 +133,33 @@ class TestPrePipelineGate:
         assert "new_violation" in reason
         assert old_pr is None
 
+    def test_new_state_pre_scoring_recheck_allows_retry(self, store_and_gate):
+        """A NEW placeholder (Case 1's own write, or left behind on
+        purpose by a delivery that never went live - see cli.py's
+        html-has-lang fast-track and case-11, 2026-09-04) must not fall
+        through to unknown_state_fallback on the next pre-scoring check
+        (new_score=None, new_solution_hash=None) - that call pattern
+        skips Case 4's identical-hash check entirely, since it requires a
+        real hash.
+        """
+        store, gate = store_and_gate
+
+        action1, reason1, _ = gate.should_process(
+            "html-has-lang", "html", new_score=None, new_solution_hash=None
+        )
+        assert action1 == "CREATE"
+        assert reason1 == "new_violation"
+
+        # Simulates a dry-run: the violation was left at NEW on purpose
+        # (no mark_merged() call), then the same pre-scoring check runs
+        # again on a later invocation.
+        action2, reason2, old_pr = gate.should_process(
+            "html-has-lang", "html", new_score=None, new_solution_hash=None
+        )
+        assert action2 == "CREATE"
+        assert reason2 == "still_new_retry"
+        assert old_pr is None
+
     def test_skip_identical_solution(self, store_and_gate):
         """Identical solution hash returns SKIP."""
         store, gate = store_and_gate

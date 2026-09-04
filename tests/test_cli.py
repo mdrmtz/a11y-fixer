@@ -33,6 +33,35 @@ def _no_real_dependency_install(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(cli, "ensure_dependencies_installed", lambda path: None)  # noqa: ARG005
 
 
+class TestFastTrackMarkMerged:
+    """`cli._fast_track_mark_merged()` - case-11 (2026-09-04): a
+    --dry-run run against the real Hallucinate.io site stamped the
+    html-has-lang violation MERGED (pr_number=None), which then made
+    every later run - dry or live - skip via
+    PrePipelineGate.should_process()'s already_merged_to_main case,
+    before ever attempting a real GitHub delivery.
+    """
+
+    def test_live_result_marks_merged(self) -> None:
+        result = pr_delivery.LiveResult(
+            pull_request_url="https://github.com/o/r/pull/1",
+            pull_request_number=1,
+            branch_name="a11y-fixer/x",
+        )
+        assert cli._fast_track_mark_merged(result) is True  # noqa: SLF001
+
+    def test_dry_run_result_does_not_mark_merged(self, tmp_path: Path) -> None:
+        result = pr_delivery.DryRunResult(
+            diff_path=tmp_path / "x.diff",
+            description_path=tmp_path / "x.md",
+            unified_diff="",
+        )
+        assert cli._fast_track_mark_merged(result) is False  # noqa: SLF001
+
+    def test_none_does_not_mark_merged(self) -> None:
+        assert cli._fast_track_mark_merged(None) is False  # noqa: SLF001
+
+
 def test_build_parser_audit_defaults() -> None:
     parser = cli.build_parser()
     args = parser.parse_args(["audit", "--repo", "/tmp/x"])
@@ -190,8 +219,8 @@ def test_cmd_audit_writes_report(tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 
 def test_cmd_audit_requires_a_target(capsys: pytest.CaptureFixture) -> None:
     """Defense in depth alongside the argparse-level `required=True` group:
-    `_cmd_audit` itself also refuses to run with neither `--repo` nor
-    `--url` set, in case it's ever called directly with a hand-built
+    `_cmd_audit` itself also refuses to run with none of `--repo`, `--url`,
+    or `--config` set, in case it's ever called directly with a hand-built
     `Namespace` that bypassed argument parsing.
     """
     parser = cli.build_parser()
@@ -201,7 +230,63 @@ def test_cmd_audit_requires_a_target(capsys: pytest.CaptureFixture) -> None:
     exit_code = cli._cmd_audit(args)  # noqa: SLF001
 
     assert exit_code == 2
-    assert "one of --repo or --url is required" in capsys.readouterr().out
+    assert "one of --repo, --url, or --config is required" in capsys.readouterr().out
+
+
+def test_cmd_audit_config_resolves_repo_from_manifest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """`audit --config <manifest>` reuses the same sites.yaml `fleet` reads,
+    so the repo it declares doesn't need to be retyped as --repo/--url."""
+    manifest = tmp_path / "sites.yaml"
+    manifest.write_text(
+        "sites:\n  - repo: /tmp/some-repo\n    site_id: my-site\n",
+        encoding="utf-8",
+    )
+
+    parser = cli.build_parser()
+    args = parser.parse_args(["audit", "--config", str(manifest)])
+
+    assert args.repo is None
+    assert args.url is None
+
+    captured_repo = {}
+
+    def fake_apply_repo_override(repo_arg):
+        captured_repo["repo"] = repo_arg
+
+    monkeypatch.setattr(cli, "_apply_repo_override", fake_apply_repo_override)
+
+    async def fake_discover_and_audit(runner):
+        return {"total_violation_instances": 0, "pages": [], "raw_reports": []}
+
+    monkeypatch.setattr(
+        "a11y_fixer.agents.audit_crawler.discover_and_audit",
+        fake_discover_and_audit,
+    )
+    monkeypatch.setattr(cli.config, "agent_root", lambda: tmp_path)
+
+    exit_code = cli._cmd_audit(args)  # noqa: SLF001
+
+    assert exit_code == 0
+    assert args.repo == "/tmp/some-repo"
+    assert captured_repo["repo"] == "/tmp/some-repo"
+    assert (tmp_path / "evaluation/results/audit.json").exists()
+
+
+def test_cmd_audit_config_rejects_multi_site_manifest(tmp_path: Path) -> None:
+    manifest = tmp_path / "sites.yaml"
+    manifest.write_text(
+        "sites:\n  - repo: /tmp/a\n  - repo: /tmp/b\n",
+        encoding="utf-8",
+    )
+
+    parser = cli.build_parser()
+    args = parser.parse_args(["audit", "--config", str(manifest)])
+
+    exit_code = cli._cmd_audit(args)  # noqa: SLF001
+
+    assert exit_code == 2
 
 
 async def test_acmd_run_uses_crawler_discovery_when_repo_given(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

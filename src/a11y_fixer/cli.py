@@ -119,11 +119,36 @@ def _apply_repo_override(repo_arg: str | None) -> None:
 
 
 def _cmd_audit(args: argparse.Namespace) -> int:
+    if args.config:
+        # Reuses the same manifest `fleet` reads, so a repo you've
+        # already declared in sites.yaml doesn't need to be retyped as
+        # --repo/--url just to get a standalone audit.json snapshot.
+        # Same one-site-per-manifest limit as fleet (see load_manifest()'s
+        # own docstring) - not a technical requirement here the way it is
+        # for fleet's global HITL/violation-store state, but kept
+        # consistent rather than silently auditing just the first entry.
+        try:
+            sites = load_manifest(args.config)
+        except FleetManifestError as exc:
+            print(f"audit: {exc}")  # noqa: T201
+            return 2
+        if len(sites) != 1:
+            print(  # noqa: T201
+                "audit --config currently supports one site per manifest "
+                f"(manifest has {len(sites)})"
+            )
+            return 2
+        site = sites[0]
+        args.repo = site.repo
+        args.url = site.url
+        print(f"  from manifest: {args.config} -> {site.site_id}")  # noqa: T201
+
     if not (args.repo or args.url):
         print(  # noqa: T201
-            "one of --repo or --url is required: audit needs an explicit "
-            "target to scan - a local path/git URL via --repo, or a live "
-            "site via --url."
+            "one of --repo, --url, or --config is required: audit needs "
+            "an explicit target to scan - a local path/git URL via "
+            "--repo, a live site via --url, or a fleet manifest via "
+            "--config."
         )
         return 2
 
@@ -261,6 +286,23 @@ def _capture_and_reset_git_changes(fixture: Path) -> list[pr_delivery.FileChange
         check=False,
     )  # noqa: S603, S607
     return changes
+
+
+def _fast_track_mark_merged(delivery_result: object) -> bool:
+    """Whether a html-lang fast-track delivery should be stamped MERGED.
+
+    Only a genuine live delivery (`pr_delivery.LiveResult`) advances the
+    violation store to MERGED. A dry-run only ever produces a
+    `pr_delivery.DryRunResult` - a diff written to disk, not a real PR -
+    and must never be stamped MERGED: `PrePipelineGate.should_process()`
+    treats MERGED as terminal (`already_merged_to_main`), so once
+    stamped, every later run - dry or live - skips immediately without
+    ever attempting a real delivery again. (case-11, 2026-09-04:
+    reproduced exactly this against the real Hallucinate.io site - a
+    --dry-run run stamped MERGED with pr_number=None, then a real
+    `fleet` run silently did nothing.)
+    """
+    return isinstance(delivery_result, pr_delivery.LiveResult)
 
 
 def deliver_violation(
@@ -772,19 +814,28 @@ async def _acmd_run(args: argparse.Namespace) -> int:
                         delivery_result, pr_delivery.LiveResult
                     ):
                         pr_number = delivery_result.pull_request_number
-                    store.mark_merged(
-                        violation_id=violation_id,
-                        rule_id=violation["rule"],
-                        selector=violation["selector"],
-                        pr_number=pr_number,
-                    )
-                    # mark_merged() only updates the in-memory cache (the
-                    # same contract hitl/review_queue.py's own call site
-                    # follows, saving right after) - without this, the
-                    # MERGED status never reaches .violation_status.json
-                    # and PrePipelineGate treats this violation as brand
-                    # new again on every subsequent run.
-                    store.save()
+
+                    if _fast_track_mark_merged(delivery_result):
+                        store.mark_merged(
+                            violation_id=violation_id,
+                            rule_id=violation["rule"],
+                            selector=violation["selector"],
+                            pr_number=pr_number,
+                        )
+                        # mark_merged() only updates the in-memory cache
+                        # (the same contract hitl/review_queue.py's own
+                        # call site follows, saving right after) -
+                        # without this, the MERGED status never reaches
+                        # .violation_status.json and PrePipelineGate
+                        # treats this violation as brand new again on
+                        # every subsequent run.
+                        store.save()
+                    else:
+                        print(  # noqa: T201
+                            "  \u2139\ufe0f  dry-run only - left unmerged in "
+                            "the violation store so a later live run can "
+                            "still deliver this for real"
+                        )
 
                     metrics["created"] += 1
                 except Exception as e:  # noqa: BLE001
@@ -1242,12 +1293,18 @@ def build_parser() -> argparse.ArgumentParser:
     audit_target_group.add_argument(
         "--repo",
         default=None,
-        help="Local path or git URL of the Angular repo to audit (required, unless --url is given)",
+        help="Local path or git URL of the Angular repo to audit (required, unless --url/--config is given)",
     )
     audit_target_group.add_argument(
         "--url",
         default=None,
         help="Audit a live, already-running site directly (no clone/build/serve) - audit-only, can't deliver fixes",
+    )
+    audit_target_group.add_argument(
+        "--config",
+        default=None,
+        help="Path to a fleet manifest YAML file (see sites.example.yaml) - "
+        "audits the one site it declares, without retyping --repo/--url",
     )
     audit_parser.set_defaults(func=_cmd_audit)
 

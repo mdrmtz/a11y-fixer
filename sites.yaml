@@ -27,4 +27,4 @@ sites:
     # Optional: NAME of the env var holding this site's GitHub token.
     # Defaults to GITHUB_TOKEN. Useful when different sites need different
     # tokens/scopes (e.g. one token per organization).
-    github_token_env: GITHUB_TOKEN #HALLUCINATE_IO_GITHUB_TOKEN
+    github_token_env: HALLUCINATE_IO_GITHUB_TOKEN

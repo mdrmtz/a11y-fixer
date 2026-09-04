@@ -191,6 +191,18 @@ class PrePipelineGate:
         if new_solution_hash is not None and new_solution_hash == prior.best_solution_hash:
             return ("SKIP", "identical_solution_exists", prior.current_pr_number)
 
+        # Case 4.5: Still NEW - a placeholder from Case 1, or left
+        # behind on purpose by a delivery that never actually went
+        # live (e.g. cli.py's html-has-lang fast-track: only a
+        # genuine live delivery advances this to MERGED; a dry-run
+        # leaves it at NEW so it doesn't block a later live attempt -
+        # see case-11, 2026-09-04). Nothing is in flight here, unlike
+        # PR_OPEN/HITL_QUEUED below, so - unlike their None-args
+        # pre-check branches, which SKIP to avoid duplicating
+        # in-flight work - allow reprocessing.
+        if prior.state == ViolationState.NEW:
+            return ("CREATE", "still_new_retry", None)
+
         # Case 5: Open PR exists
         if prior.state == ViolationState.PR_OPEN:
             # If called with None values (pre-scoring check), skip to avoid re-processing
