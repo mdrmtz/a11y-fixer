@@ -1,0 +1,60 @@
+{
+  "summary": {
+    "total_cases": 3,
+    "violation_clearance_rate": 0.0,
+    "human_escalation_rate": 1.0,
+    "error_rate": 1.0,
+    "mean_latency_seconds": 215.3763045279969,
+    "brier_score": 0.0,
+    "expected_calibration_error": 0.0,
+    "by_rule": {
+      "color-contrast": {
+        "total": 1,
+        "cleared": 0
+      },
+      "button-name": {
+        "total": 1,
+        "cleared": 0
+      },
+      "link-name": {
+        "total": 1,
+        "cleared": 0
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-20",
+      "rule": "color-contrast",
+      "page": "/",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 300.9856202919909,
+      "error": "unhandled errors in a TaskGroup (1 sub-exception)",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-21",
+      "rule": "button-name",
+      "page": "/pricing",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 150.29161012501572,
+      "error": "axe-core cli failed (exit 1):\n                      0x0000000100ee5c54 chromedriver + 220244\\n' +\n    '4   chromedriver                        0x0000000100ee7638 chromedriver + 226872\\n' +\n    '5   chromedriver                        0x0000000100ee60bc chromedriver + 221372\\n' +\n    '6   chromedriver                        0x0000000100ee5864 chromedriver + 219236\\n' +\n    '7   chromedriver                        0x0000000100ee5590 chromedriver + 218512\\n' +\n    '8   chromedriver                        0x0000000100ee32e4 chromedriver + 209636\\n' +\n    '9   chromedriver                        0x0000000100ee3db0 chromedriver + 212400\\n' +\n    '10  chromedriver                        0x0000000100ef8a88 chromedriver + 297608\\n' +\n    '11  chromedriver                        0x0000000100f7dd64 chromedriver + 843108\\n' +\n    '12  chromedriver                        0x0000000100f7d2b0 chromedriver + 840368\\n' +\n    '13  chromedriver                        0x0000000100f33abc chromedriver + 539324\\n' +\n    '14  chromedriver                        0x00000001011ccc8c chromedriver + 3263628\\n' +\n    '15  chromedriver                        0x00000001011cfcc4 chromedriver + 3275972\\n' +\n    '16  chromedriver                        0x00000001011b68c8 chromedriver + 3172552\\n' +\n    '17  chromedriver                        0x00000001011d0594 chromedriver + 3278228\\n' +\n    '18  chromedriver                        0x00000001011aa6b4 chromedriver + 3122868\\n' +\n    '19  chromedriver                        0x00000001011ebde8 chromedriver + 3390952\\n' +\n    '20  chromedriver                        0x00000001011ebf48 chromedriver + 3391304\\n' +\n    '21  chromedriver                        0x00000001011fced0 chromedriver + 3460816\\n' +\n    '22  libsystem_pthread.dylib             0x000000018f4dbc54 _pthread_start + 132\\n' +\n    '23  libsystem_pthread.dylib             0x000000018f4d6c18 thread_start + 4\\n'\n}\u001b[22m\u001b[39m\nPlease report the problem to: \u001b[4m\u001b[34mhttps://github.com/dequelabs/axe-core-npm/issues/\u001b[39m\u001b[24m\n\n",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-22",
+      "rule": "link-name",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 194.851683166984,
+      "error": "axe-core cli failed (exit 1):\n                      0x0000000104bb1c54 chromedriver + 220244\\n' +\n    '4   chromedriver                        0x0000000104bb3638 chromedriver + 226872\\n' +\n    '5   chromedriver                        0x0000000104bb20bc chromedriver + 221372\\n' +\n    '6   chromedriver                        0x0000000104bb1864 chromedriver + 219236\\n' +\n    '7   chromedriver                        0x0000000104bb1590 chromedriver + 218512\\n' +\n    '8   chromedriver                        0x0000000104baf2e4 chromedriver + 209636\\n' +\n    '9   chromedriver                        0x0000000104bafdb0 chromedriver + 212400\\n' +\n    '10  chromedriver                        0x0000000104bc4a88 chromedriver + 297608\\n' +\n    '11  chromedriver                        0x0000000104c49d64 chromedriver + 843108\\n' +\n    '12  chromedriver                        0x0000000104c492b0 chromedriver + 840368\\n' +\n    '13  chromedriver                        0x0000000104bffabc chromedriver + 539324\\n' +\n    '14  chromedriver                        0x0000000104e98c8c chromedriver + 3263628\\n' +\n    '15  chromedriver                        0x0000000104e9bcc4 chromedriver + 3275972\\n' +\n    '16  chromedriver                        0x0000000104e828c8 chromedriver + 3172552\\n' +\n    '17  chromedriver                        0x0000000104e9c594 chromedriver + 3278228\\n' +\n    '18  chromedriver                        0x0000000104e766b4 chromedriver + 3122868\\n' +\n    '19  chromedriver                        0x0000000104eb7de8 chromedriver + 3390952\\n' +\n    '20  chromedriver                        0x0000000104eb7f48 chromedriver + 3391304\\n' +\n    '21  chromedriver                        0x0000000104ec8ed0 chromedriver + 3460816\\n' +\n    '22  libsystem_pthread.dylib             0x000000018f4dbc54 _pthread_start + 132\\n' +\n    '23  libsystem_pthread.dylib             0x000000018f4d6c18 thread_start + 4\\n'\n}\u001b[22m\u001b[39m\nPlease report the problem to: \u001b[4m\u001b[34mhttps://github.com/dequelabs/axe-core-npm/issues/\u001b[39m\u001b[24m\n\n",
+      "scoring_details": null
+    }
+  ]
+}

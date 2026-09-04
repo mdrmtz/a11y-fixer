@@ -1,0 +1,85 @@
+{
+  "summary": {
+    "total_cases": 4,
+    "violation_clearance_rate": 1.0,
+    "human_escalation_rate": 0.75,
+    "error_rate": 0.0,
+    "mean_latency_seconds": 64.84730918750574,
+    "brier_score": 0.015625,
+    "expected_calibration_error": 0.0625,
+    "by_rule": {
+      "html-has-lang": {
+        "total": 3,
+        "cleared": 3
+      },
+      "color-contrast": {
+        "total": 1,
+        "cleared": 1
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-01",
+      "rule": "html-has-lang",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 20.0,
+      "cleared": true,
+      "latency_seconds": 5.43160420798813,
+      "error": null,
+      "scoring_details": {
+        "build_error": null,
+        "ast_error": null,
+        "wcag_judge_confidence": 100,
+        "visual_error": null,
+        "fast_track": "html_lang_applier"
+      }
+    },
+    {
+      "case_id": "case-02",
+      "rule": "color-contrast",
+      "page": "/about",
+      "route": "auto",
+      "rubric_score": 15.0,
+      "cleared": true,
+      "latency_seconds": 243.4976464160136,
+      "error": null,
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-03",
+      "rule": "html-has-lang",
+      "page": "/contact",
+      "route": "human",
+      "rubric_score": 20.0,
+      "cleared": true,
+      "latency_seconds": 5.335640542005422,
+      "error": null,
+      "scoring_details": {
+        "build_error": null,
+        "ast_error": null,
+        "wcag_judge_confidence": 100,
+        "visual_error": null,
+        "fast_track": "html_lang_applier"
+      }
+    },
+    {
+      "case_id": "case-04",
+      "rule": "html-has-lang",
+      "page": "/pricing",
+      "route": "human",
+      "rubric_score": 20.0,
+      "cleared": true,
+      "latency_seconds": 5.124345584015828,
+      "error": null,
+      "scoring_details": {
+        "build_error": null,
+        "ast_error": null,
+        "wcag_judge_confidence": 100,
+        "visual_error": null,
+        "fast_track": "html_lang_applier"
+      }
+    }
+  ]
+}

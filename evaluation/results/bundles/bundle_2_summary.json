@@ -1,0 +1,56 @@
+{
+  "summary": {
+    "total_cases": 3,
+    "violation_clearance_rate": 0.3333333333333333,
+    "human_escalation_rate": 1.0,
+    "error_rate": 0.3333333333333333,
+    "mean_latency_seconds": 194.4716312219971,
+    "brier_score": 0.43416666666666665,
+    "expected_calibration_error": 0.5166666666666666,
+    "by_rule": {
+      "link-name": {
+        "total": 2,
+        "cleared": 1
+      },
+      "image-alt": {
+        "total": 1,
+        "cleared": 0
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-05",
+      "rule": "link-name",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": true,
+      "latency_seconds": 199.44201249998878,
+      "error": null,
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-06",
+      "rule": "link-name",
+      "page": "/contact",
+      "route": "human",
+      "rubric_score": 11.0,
+      "cleared": false,
+      "latency_seconds": 325.46032237500185,
+      "error": null,
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-07",
+      "rule": "image-alt",
+      "page": "/blog",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 58.51255879100063,
+      "error": "Request blocked: PII detected (invalid_json_after_redaction)",
+      "scoring_details": null
+    }
+  ]
+}

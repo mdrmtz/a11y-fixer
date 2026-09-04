@@ -1,0 +1,76 @@
+[project]
+name = "a11y-fixer"
+version = "0.1.0"
+description = "Autonomous WCAG 2.2 AA remediation agent for Angular SPAs"
+requires-python = ">=3.11"
+readme = "README.md"
+authors = [
+    { name = "mdrmtz" },
+]
+license = "GPL-3.0-only"
+# Copied from ../LICENSE (the cmu-capstone repo root, which covers the
+# whole monorepo) rather than referenced there directly - `license-files`
+# globs are resolved relative to this pyproject.toml and don't reach
+# outside the `agent/` project root; a `../LICENSE` entry built without
+# error but was silently dropped from the wheel (verified against a real
+# build - no exception, just absent from the archive). GPLv3 specifically
+# requires the license text travel with distributed copies, so silently
+# shipping without it isn't an acceptable gap. Keep this copy in sync if
+# the root LICENSE ever changes.
+license-files = ["LICENSE"]
+keywords = ["accessibility", "wcag", "a11y", "remediation", "angular"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "deepagents>=0.7.0",
+    "langchain>=1.3.0",
+    "langchain-core>=1.6.0",
+    "langgraph>=1.2.0",
+    "langchain-anthropic>=1.7.0",
+    "langchain-openai>=1.6.0",
+    "langchain-ollama>=1.1.0",
+    "langchain-openrouter>=0.2.0",
+    "langchain-mcp-adapters>=0.3.0",
+    "python-dotenv>=1.2.0",
+    "httpx>=0.28.0",
+    "pydantic>=2.13.0",
+    "pyyaml>=6.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.1.0",
+    "pytest-asyncio>=0.24.0",
+]
+
+[project.scripts]
+a11y-fixer = "a11y_fixer.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+# Bundled skill prompts (`config.resolve_skill()`) - not `.py` files, so
+# they need an explicit package-data entry to ship in the wheel/sdist at
+# all. See agent/src/a11y_fixer/skills/ - copies of the same-named
+# .agents/skills/ folders, kept in sync manually (see config.py's
+# `resolve_skill()` docstring for the tradeoff).
+a11y_fixer = ["skills/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "."]
+addopts = "-m 'not e2e'"
+markers = [
+    "e2e: end-to-end tests that require git/npm/docker and are skipped by default",
+]
+asyncio_mode = "auto"

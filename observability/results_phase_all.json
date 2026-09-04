@@ -1,0 +1,277 @@
+{
+  "summary": {
+    "total_cases": 22,
+    "violation_clearance_rate": 0.0,
+    "human_escalation_rate": 1.0,
+    "error_rate": 1.0,
+    "mean_latency_seconds": 217.09441472536525,
+    "brier_score": 0.0,
+    "expected_calibration_error": 0.0,
+    "by_rule": {
+      "html-has-lang": {
+        "total": 7,
+        "cleared": 0
+      },
+      "color-contrast": {
+        "total": 4,
+        "cleared": 0
+      },
+      "link-name": {
+        "total": 6,
+        "cleared": 0
+      },
+      "image-alt": {
+        "total": 4,
+        "cleared": 0
+      },
+      "button-name": {
+        "total": 1,
+        "cleared": 0
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-01",
+      "rule": "html-has-lang",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 429.22496966598555,
+      "error": "Command '['/Users/dks0721706/.nvm/versions/node/v24.19.0/bin/npx', '@axe-core/cli', 'http://127.0.0.1:4200/about', '--tags', 'wcag2a,wcag2aa', '--stdout']' timed out after 300.0 seconds",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-02",
+      "rule": "color-contrast",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 421.3049465419899,
+      "error": "Command '['/Users/dks0721706/.nvm/versions/node/v24.19.0/bin/npx', '@axe-core/cli', 'http://127.0.0.1:4200/about', '--tags', 'wcag2a,wcag2aa', '--stdout']' timed out after 300.0 seconds",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-03",
+      "rule": "html-has-lang",
+      "page": "/contact",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.03837929200381,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-04",
+      "rule": "html-has-lang",
+      "page": "/pricing",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 524.3094117919973,
+      "error": "Command '['/Users/dks0721706/.nvm/versions/node/v24.19.0/bin/npx', '@axe-core/cli', 'http://127.0.0.1:4200/', 'http://127.0.0.1:4200/home', 'http://127.0.0.1:4200/product', 'http://127.0.0.1:4200/case-studies', 'http://127.0.0.1:4200/docs', 'http://127.0.0.1:4200/careers', 'http://127.0.0.1:4200/blog', 'http://127.0.0.1:4200/pricing', 'http://127.0.0.1:4200/about', 'http://127.0.0.1:4200/contact', 'http://127.0.0.1:4200/status', '--tags', 'wcag2a,wcag2aa', '--stdout']' timed out after 300.0 seconds",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-05",
+      "rule": "link-name",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.00871900000493,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-06",
+      "rule": "link-name",
+      "page": "/contact",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.02772024998558,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-07",
+      "rule": "image-alt",
+      "page": "/blog",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.02802087500459,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-08",
+      "rule": "image-alt",
+      "page": "/features",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.02113424998242,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-09",
+      "rule": "html-has-lang",
+      "page": "/",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.01659729098901,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-10",
+      "rule": "link-name",
+      "page": "/features",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 378.4266140840191,
+      "error": "Command '['/Users/dks0721706/.nvm/versions/node/v24.19.0/bin/npx', '@axe-core/cli', 'http://127.0.0.1:4200/features', '--tags', 'wcag2a,wcag2aa', '--stdout']' timed out after 300.0 seconds",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-11",
+      "rule": "html-has-lang",
+      "page": "/blog",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.02525408400106,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-12",
+      "rule": "link-name",
+      "page": "/features",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.01963387499563,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-13",
+      "rule": "html-has-lang",
+      "page": "/contact",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 66.28898425001535,
+      "error": "Request blocked: PII detected (invalid_json_after_redaction)",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-14",
+      "rule": "color-contrast",
+      "page": "/",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.02022474998375,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-15",
+      "rule": "image-alt",
+      "page": "/pricing",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 464.4085398330062,
+      "error": "Command '['/Users/dks0721706/.nvm/versions/node/v24.19.0/bin/npx', '@axe-core/cli', 'http://127.0.0.1:4200/pricing', '--tags', 'wcag2a,wcag2aa', '--stdout']' timed out after 300.0 seconds",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-16",
+      "rule": "image-alt",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.02746212499915,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-17",
+      "rule": "color-contrast",
+      "page": "/blog",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.0115680420131,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-18",
+      "rule": "link-name",
+      "page": "/features",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 395.59025020801346,
+      "error": "Command '['/Users/dks0721706/.nvm/versions/node/v24.19.0/bin/npx', '@axe-core/cli', 'http://127.0.0.1:4200/features', '--tags', 'wcag2a,wcag2aa', '--stdout']' timed out after 300.0 seconds",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-19",
+      "rule": "html-has-lang",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.03925454200362,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-20",
+      "rule": "color-contrast",
+      "page": "/",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 416.1889419160143,
+      "error": "Command '['/Users/dks0721706/.nvm/versions/node/v24.19.0/bin/npx', '@axe-core/cli', 'http://127.0.0.1:4200/', '--tags', 'wcag2a,wcag2aa', '--stdout']' timed out after 300.0 seconds",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-21",
+      "rule": "button-name",
+      "page": "/pricing",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.02018370802398,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-22",
+      "rule": "link-name",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.03031358300359,
+      "error": "case timed out after 120s",
+      "scoring_details": null
+    }
+  ]
+}

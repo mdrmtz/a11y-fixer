@@ -1,0 +1,185 @@
+[
+  {
+    "id": "case-01",
+    "page": "/about",
+    "rule": "html-has-lang",
+    "selector": ".element-1409",
+    "wcag": "1.1.1",
+    "ground_truth_fix": "Apply fix for html-has-lang violation",
+    "route": "auto"
+  },
+  {
+    "id": "case-02",
+    "page": "/about",
+    "rule": "color-contrast",
+    "selector": ".element-4657",
+    "wcag": "1.1.1",
+    "ground_truth_fix": "Apply fix for color-contrast violation"
+  },
+  {
+    "id": "case-03",
+    "page": "/contact",
+    "rule": "html-has-lang",
+    "selector": ".element-9935",
+    "wcag": "1.1.1",
+    "ground_truth_fix": "Apply fix for html-has-lang violation",
+    "route": "auto"
+  },
+  {
+    "id": "case-04",
+    "page": "/pricing",
+    "rule": "html-has-lang",
+    "selector": ".element-1488",
+    "wcag": "1.1.1",
+    "ground_truth_fix": "Apply fix for html-has-lang violation",
+    "route": "auto"
+  },
+  {
+    "id": "case-05",
+    "page": "/about",
+    "rule": "link-name",
+    "selector": ".element-1434",
+    "wcag": "4.1.2",
+    "ground_truth_fix": "Apply fix for link-name violation"
+  },
+  {
+    "id": "case-06",
+    "page": "/contact",
+    "rule": "link-name",
+    "selector": ".element-7873",
+    "wcag": "1.4.3",
+    "ground_truth_fix": "Apply fix for link-name violation"
+  },
+  {
+    "id": "case-07",
+    "page": "/blog",
+    "rule": "image-alt",
+    "selector": ".element-1106",
+    "wcag": "1.4.3",
+    "ground_truth_fix": "Apply fix for image-alt violation"
+  },
+  {
+    "id": "case-08",
+    "page": "/features",
+    "rule": "image-alt",
+    "selector": ".element-3547",
+    "wcag": "1.4.3",
+    "ground_truth_fix": "Apply fix for image-alt violation"
+  },
+  {
+    "id": "case-09",
+    "page": "/",
+    "rule": "html-has-lang",
+    "selector": ".element-7224",
+    "wcag": "1.1.1",
+    "ground_truth_fix": "Apply fix for html-has-lang violation",
+    "route": "auto"
+  },
+  {
+    "id": "case-10",
+    "page": "/features",
+    "rule": "link-name",
+    "selector": ".element-5333",
+    "wcag": "1.1.1",
+    "ground_truth_fix": "Apply fix for link-name violation"
+  },
+  {
+    "id": "case-11",
+    "page": "/blog",
+    "rule": "html-has-lang",
+    "selector": ".element-7201",
+    "wcag": "1.1.1",
+    "ground_truth_fix": "Apply fix for html-has-lang violation",
+    "route": "auto"
+  },
+  {
+    "id": "case-12",
+    "page": "/features",
+    "rule": "link-name",
+    "selector": ".element-6925",
+    "wcag": "4.1.2",
+    "ground_truth_fix": "Apply fix for link-name violation"
+  },
+  {
+    "id": "case-13",
+    "page": "/contact",
+    "rule": "html-has-lang",
+    "selector": ".element-1750",
+    "wcag": "1.4.3",
+    "ground_truth_fix": "Apply fix for html-has-lang violation",
+    "route": "auto"
+  },
+  {
+    "id": "case-14",
+    "page": "/",
+    "rule": "color-contrast",
+    "selector": ".element-2654",
+    "wcag": "3.1.1",
+    "ground_truth_fix": "Apply fix for color-contrast violation"
+  },
+  {
+    "id": "case-15",
+    "page": "/pricing",
+    "rule": "image-alt",
+    "selector": ".element-3664",
+    "wcag": "2.1.1",
+    "ground_truth_fix": "Apply fix for image-alt violation"
+  },
+  {
+    "id": "case-16",
+    "page": "/about",
+    "rule": "image-alt",
+    "selector": ".element-2169",
+    "wcag": "4.1.2",
+    "ground_truth_fix": "Apply fix for image-alt violation"
+  },
+  {
+    "id": "case-17",
+    "page": "/blog",
+    "rule": "color-contrast",
+    "selector": ".element-3677",
+    "wcag": "3.1.1",
+    "ground_truth_fix": "Apply fix for color-contrast violation"
+  },
+  {
+    "id": "case-18",
+    "page": "/features",
+    "rule": "link-name",
+    "selector": ".element-4598",
+    "wcag": "2.1.1",
+    "ground_truth_fix": "Apply fix for link-name violation"
+  },
+  {
+    "id": "case-19",
+    "page": "/about",
+    "rule": "html-has-lang",
+    "selector": ".element-6168",
+    "wcag": "3.1.1",
+    "ground_truth_fix": "Apply fix for html-has-lang violation",
+    "route": "auto"
+  },
+  {
+    "id": "case-20",
+    "page": "/",
+    "rule": "color-contrast",
+    "selector": ".element-6155",
+    "wcag": "1.4.3",
+    "ground_truth_fix": "Apply fix for color-contrast violation"
+  },
+  {
+    "id": "case-21",
+    "page": "/pricing",
+    "rule": "button-name",
+    "selector": ".element-3340",
+    "wcag": "2.1.1",
+    "ground_truth_fix": "Apply fix for button-name violation"
+  },
+  {
+    "id": "case-22",
+    "page": "/about",
+    "rule": "link-name",
+    "selector": ".element-9830",
+    "wcag": "2.1.1",
+    "ground_truth_fix": "Apply fix for link-name violation"
+  }
+]

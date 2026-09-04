@@ -1,0 +1,72 @@
+{
+  "summary": {
+    "total_cases": 3,
+    "violation_clearance_rate": 1.0,
+    "human_escalation_rate": 0.6666666666666666,
+    "error_rate": 0.0,
+    "mean_latency_seconds": 115.75342069433343,
+    "brier_score": 0.33416666666666667,
+    "expected_calibration_error": 0.35,
+    "by_rule": {
+      "image-alt": {
+        "total": 1,
+        "cleared": 1
+      },
+      "html-has-lang": {
+        "total": 1,
+        "cleared": 1
+      },
+      "link-name": {
+        "total": 1,
+        "cleared": 1
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-08",
+      "rule": "image-alt",
+      "page": "/features",
+      "route": "auto",
+      "rubric_score": 0.0,
+      "cleared": true,
+      "latency_seconds": 257.5531600420072,
+      "error": null,
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-09",
+      "rule": "html-has-lang",
+      "page": "/",
+      "route": "human",
+      "rubric_score": 20.0,
+      "cleared": true,
+      "latency_seconds": 5.268582499993499,
+      "error": null,
+      "scoring_details": {
+        "build_error": null,
+        "ast_error": null,
+        "wcag_judge_confidence": 100,
+        "visual_error": null,
+        "fast_track": "html_lang_applier"
+      }
+    },
+    {
+      "case_id": "case-10",
+      "rule": "link-name",
+      "page": "/features",
+      "route": "human",
+      "rubric_score": 19.0,
+      "cleared": true,
+      "latency_seconds": 84.43851954099955,
+      "error": null,
+      "scoring_details": {
+        "build_pass": true,
+        "ast_valid": true,
+        "wcag_compliance_score": 0.8,
+        "cls": 0.03,
+        "box_drift": 1.5
+      }
+    }
+  ]
+}

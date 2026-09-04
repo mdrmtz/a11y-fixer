@@ -1,0 +1,67 @@
+# Minimal unattended trigger: a new axe-core audit JSON lands -> the CLI runs
+# with no manual step. Dry-run only (`--no-live`) - a CI job must never open a
+# live PR unattended; a human reviews the uploaded diff artifact before any
+# merge.
+#
+# NOTE: GitHub only executes workflows under `.github/workflows/` at the repo
+# root. This file lives here (per the plan's file tree) as the deliverable
+# reference copy; deploying it for real means copying it to
+# `<repo-root>/.github/workflows/a11y-fixer.yml`.
+name: A11y Fixer
+
+on:
+  push:
+    paths:
+      - "cmu-capstone/agent/evaluation/results/audit.json"
+  workflow_dispatch:
+    inputs:
+      audit_path:
+        description: "Path to the audit JSON to run against (relative to cmu-capstone/agent)"
+        required: false
+        default: "evaluation/results/audit.json"
+
+jobs:
+  run-a11y-fixer:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cmu-capstone/agent
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install agent dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Install fixture dependencies
+        working-directory: cmu-capstone/Hallucinate.io
+        run: npm ci
+
+      - name: Run the A11y Fixer (dry-run, unattended)
+        env:
+          A11Y_LLM_BACKEND: ${{ vars.A11Y_LLM_BACKEND }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+          A11Y_FIXTURE_PATH: ${{ github.workspace }}/cmu-capstone/Hallucinate.io
+        run: |
+          python -m a11y_fixer.cli run \
+            --audit "${{ github.event.inputs.audit_path || 'evaluation/results/audit.json' }}" \
+            --no-live \
+            --yes
+
+      - name: Upload dry-run PR artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: a11y-fixer-dry-run
+          path: cmu-capstone/agent/evaluation/results/prs/
+          if-no-files-found: warn

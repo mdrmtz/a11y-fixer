@@ -1,0 +1,30 @@
+# Example fleet manifest for `a11y-fixer fleet --config sites.yaml`.
+#
+# Fleet currently supports exactly one entry under `sites:` per invocation -
+# see `fleet_config.py`/`cli.py`'s `_cmd_fleet` for why (the HITL queue and
+# audit-output paths aren't per-site-namespaced yet).
+#
+# NEVER put a real token in this file. `github_token_env` is the NAME of an
+# environment variable that holds the token (e.g. exported in your shell,
+# or set in a gitignored `.env`) - a literal `github_token:` key here is
+# rejected outright by `fleet_config.load_manifest()`.
+#
+# `a11y-fixer fleet` defaults to LIVE delivery (opening real PRs), unlike
+# `a11y-fixer run` which defaults to a dry-run. Pass `--dry-run` to write
+# diffs instead.
+
+sites:
+  - repo: https://github.com/mdrmtz/Hallucinate.io.git
+    # Optional: audit this live URL instead of building/serving `repo`
+    # locally. Fixes are still written to `repo` and PRs opened against it.
+    url: https://hallucinate.netlify.app/
+
+    # Optional: a short id for this site, used in log/status output.
+    # Defaults to the derived "owner/repo" (or the local path's basename
+    # for a checkout with no GitHub-shaped remote).
+    site_id: hallucinate.io
+
+    # Optional: NAME of the env var holding this site's GitHub token.
+    # Defaults to GITHUB_TOKEN. Useful when different sites need different
+    # tokens/scopes (e.g. one token per organization).
+    github_token_env: GITHUB_TOKEN #HALLUCINATE_IO_GITHUB_TOKEN

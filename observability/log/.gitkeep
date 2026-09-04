@@ -1,0 +1,3 @@
+# This file ensures the observability/log/ directory is tracked in git
+# Logs generated here are JSON files with ISO 8601 timestamps
+# See ../README.md for documentation on log structure and usage
