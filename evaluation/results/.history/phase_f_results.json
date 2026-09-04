@@ -1,0 +1,29 @@
+{
+  "summary": {
+    "total_cases": 1,
+    "violation_clearance_rate": 0.0,
+    "human_escalation_rate": 0.0,
+    "error_rate": 0.0,
+    "mean_latency_seconds": 325.1505751250006,
+    "brier_score": 0.48999999999999994,
+    "expected_calibration_error": 0.7,
+    "by_rule": {
+      "image-alt": {
+        "total": 1,
+        "cleared": 0
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-16",
+      "rule": "image-alt",
+      "page": "/about",
+      "route": "auto",
+      "rubric_score": 14.0,
+      "cleared": false,
+      "latency_seconds": 325.1505751250006,
+      "error": null
+    }
+  ]
+}

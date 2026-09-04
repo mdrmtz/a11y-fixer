@@ -1,0 +1,30 @@
+{
+  "summary": {
+    "total_cases": 1,
+    "violation_clearance_rate": 1.0,
+    "human_escalation_rate": 1.0,
+    "error_rate": 0.0,
+    "mean_latency_seconds": 252.84313349996228,
+    "brier_score": 0.0625,
+    "expected_calibration_error": 0.25,
+    "by_rule": {
+      "link-name": {
+        "total": 1,
+        "cleared": 1
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-10",
+      "rule": "link-name",
+      "page": "/features",
+      "route": "human",
+      "rubric_score": 15.0,
+      "cleared": true,
+      "latency_seconds": 252.84313349996228,
+      "error": null,
+      "scoring_details": null
+    }
+  ]
+}

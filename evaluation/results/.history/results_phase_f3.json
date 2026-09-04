@@ -1,0 +1,69 @@
+{
+  "summary": {
+    "total_cases": 5,
+    "violation_clearance_rate": 0.0,
+    "human_escalation_rate": 0.8,
+    "error_rate": 0.4,
+    "mean_latency_seconds": 67.01237496659887,
+    "brier_score": 0.26250000000000007,
+    "expected_calibration_error": 0.39,
+    "by_rule": {
+      "image-alt": {
+        "total": 5,
+        "cleared": 0
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-06",
+      "rule": "image-alt",
+      "page": "/case-studies",
+      "route": "human",
+      "rubric_score": 10.0,
+      "cleared": false,
+      "latency_seconds": 77.54775741599587,
+      "error": null
+    },
+    {
+      "case_id": "case-07",
+      "rule": "image-alt",
+      "page": "/case-studies",
+      "route": "human",
+      "rubric_score": 13.0,
+      "cleared": false,
+      "latency_seconds": 122.49150475000351,
+      "error": null
+    },
+    {
+      "case_id": "case-08",
+      "rule": "image-alt",
+      "page": "/case-studies",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 44.71658904200012,
+      "error": "unhandled errors in a TaskGroup (1 sub-exception)"
+    },
+    {
+      "case_id": "case-16",
+      "rule": "image-alt",
+      "page": "/about",
+      "route": "auto",
+      "rubric_score": 16.0,
+      "cleared": false,
+      "latency_seconds": 70.25150316699728,
+      "error": null
+    },
+    {
+      "case_id": "case-17",
+      "rule": "image-alt",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 20.05452045799757,
+      "error": "Budget limit exceeded (monthly limit). Contact your org admin."
+    }
+  ]
+}

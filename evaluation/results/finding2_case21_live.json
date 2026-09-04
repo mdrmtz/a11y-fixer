@@ -1,0 +1,33 @@
+{
+  "summary": {
+    "total_cases": 1,
+    "violation_clearance_rate": 0.0,
+    "human_escalation_rate": 1.0,
+    "error_rate": 1.0,
+    "mean_latency_seconds": 61.14439600001788,
+    "brier_score": 0.0,
+    "expected_calibration_error": 0.0,
+    "by_rule": {
+      "button-name": {
+        "total": 1,
+        "cleared": 0
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-21",
+      "rule": "button-name",
+      "page": "/pricing",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 61.14439600001788,
+      "error": "ForbiddenResponseError: Request blocked: PII detected (invalid_json_after_redaction)",
+      "scoring_details": null,
+      "delivered": null,
+      "pull_request_url": null,
+      "pull_request_number": null
+    }
+  ]
+}

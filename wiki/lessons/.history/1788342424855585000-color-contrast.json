@@ -1,0 +1,8 @@
+{
+  "id": "1788342424855585000-color-contrast",
+  "rule": "color-contrast",
+  "file_path": "unknown",
+  "rejection_reason": "Does not match codebase style",
+  "constraint": "Does not match codebase style",
+  "created_at": "2026-09-02T09:47:04.855621+00:00"
+}

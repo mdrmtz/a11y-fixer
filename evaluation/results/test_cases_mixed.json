@@ -1,0 +1,70 @@
+{
+  "summary": {
+    "total_cases": 3,
+    "violation_clearance_rate": 1.0,
+    "human_escalation_rate": 1.0,
+    "error_rate": 0.0,
+    "mean_latency_seconds": 5.093522152669418,
+    "brier_score": 0.0,
+    "expected_calibration_error": 0.0,
+    "by_rule": {
+      "html-has-lang": {
+        "total": 3,
+        "cleared": 3
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-04",
+      "rule": "html-has-lang",
+      "page": "/pricing",
+      "route": "human",
+      "rubric_score": 20.0,
+      "cleared": true,
+      "latency_seconds": 5.250565458001802,
+      "error": null,
+      "scoring_details": {
+        "build_error": null,
+        "ast_error": null,
+        "wcag_judge_confidence": 100,
+        "visual_error": null,
+        "fast_track": "html_lang_applier"
+      }
+    },
+    {
+      "case_id": "case-11",
+      "rule": "html-has-lang",
+      "page": "/blog",
+      "route": "human",
+      "rubric_score": 20.0,
+      "cleared": true,
+      "latency_seconds": 4.94841162499506,
+      "error": null,
+      "scoring_details": {
+        "build_error": null,
+        "ast_error": null,
+        "wcag_judge_confidence": 100,
+        "visual_error": null,
+        "fast_track": "html_lang_applier"
+      }
+    },
+    {
+      "case_id": "case-13",
+      "rule": "html-has-lang",
+      "page": "/contact",
+      "route": "human",
+      "rubric_score": 20.0,
+      "cleared": true,
+      "latency_seconds": 5.08158937501139,
+      "error": null,
+      "scoring_details": {
+        "build_error": null,
+        "ast_error": null,
+        "wcag_judge_confidence": 100,
+        "visual_error": null,
+        "fast_track": "html_lang_applier"
+      }
+    }
+  ]
+}

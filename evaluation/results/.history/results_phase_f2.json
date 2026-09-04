@@ -1,0 +1,49 @@
+{
+  "summary": {
+    "total_cases": 3,
+    "violation_clearance_rate": 0.0,
+    "human_escalation_rate": 0.6666666666666666,
+    "error_rate": 0.6666666666666666,
+    "mean_latency_seconds": 980.6434231526655,
+    "brier_score": 0.27,
+    "expected_calibration_error": 0.3,
+    "by_rule": {
+      "image-alt": {
+        "total": 3,
+        "cleared": 0
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-06",
+      "rule": "image-alt",
+      "page": "/case-studies",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 2.665914999997767,
+      "error": "no structured response produced after retries"
+    },
+    {
+      "case_id": "case-07",
+      "rule": "image-alt",
+      "page": "/case-studies",
+      "route": "auto",
+      "rubric_score": 18.0,
+      "cleared": false,
+      "latency_seconds": 726.8063505829996,
+      "error": null
+    },
+    {
+      "case_id": "case-08",
+      "rule": "image-alt",
+      "page": "/case-studies",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 2212.458003874999,
+      "error": "Provider returned error"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "summary": {
+    "total_cases": 1,
+    "violation_clearance_rate": 1.0,
+    "human_escalation_rate": 1.0,
+    "error_rate": 0.0,
+    "mean_latency_seconds": 5.315931500022998,
+    "brier_score": 0.0,
+    "expected_calibration_error": 0.0,
+    "by_rule": {
+      "html-has-lang": {
+        "total": 1,
+        "cleared": 1
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-09",
+      "rule": "html-has-lang",
+      "page": "/",
+      "route": "human",
+      "rubric_score": 20.0,
+      "cleared": true,
+      "latency_seconds": 5.315931500022998,
+      "error": null,
+      "scoring_details": {
+        "build_error": null,
+        "ast_error": null,
+        "wcag_judge_confidence": 100,
+        "visual_error": null,
+        "fast_track": "html_lang_applier"
+      }
+    }
+  ]
+}

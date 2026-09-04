@@ -1,0 +1,103 @@
+{
+  "summary": {
+    "total_cases": 5,
+    "violation_clearance_rate": 0.8,
+    "human_escalation_rate": 0.6,
+    "error_rate": 0.2,
+    "mean_latency_seconds": 142.91007015799988,
+    "brier_score": 0.0015000000000000026,
+    "expected_calibration_error": 0.030000000000000072,
+    "by_rule": {
+      "color-contrast": {
+        "total": 1,
+        "cleared": 1
+      },
+      "image-alt": {
+        "total": 1,
+        "cleared": 1
+      },
+      "html-has-lang": {
+        "total": 1,
+        "cleared": 1
+      },
+      "link-name": {
+        "total": 1,
+        "cleared": 0
+      },
+      "button-name": {
+        "total": 1,
+        "cleared": 1
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-02",
+      "rule": "color-contrast",
+      "page": "/about",
+      "route": "auto",
+      "rubric_score": 19.0,
+      "cleared": true,
+      "latency_seconds": 148.6285369579855,
+      "error": null,
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-07",
+      "rule": "image-alt",
+      "page": "/blog",
+      "route": "human",
+      "rubric_score": 19.0,
+      "cleared": true,
+      "latency_seconds": 133.92812991599203,
+      "error": null,
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-09",
+      "rule": "html-has-lang",
+      "page": "/",
+      "route": "human",
+      "rubric_score": 20.0,
+      "cleared": true,
+      "latency_seconds": 6.134331708017271,
+      "error": null,
+      "scoring_details": {
+        "build_error": null,
+        "ast_error": null,
+        "wcag_judge_confidence": 100,
+        "visual_error": null,
+        "fast_track": "html_lang_applier"
+      }
+    },
+    {
+      "case_id": "case-10",
+      "rule": "link-name",
+      "page": "/features",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 301.23943612500443,
+      "error": "unhandled errors in a TaskGroup (1 sub-exception)",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-21",
+      "rule": "button-name",
+      "page": "/pricing",
+      "route": "auto",
+      "rubric_score": 19.0,
+      "cleared": true,
+      "latency_seconds": 124.61991608300013,
+      "error": null,
+      "scoring_details": {
+        "build_error": false,
+        "ast_error": false,
+        "wcag_judge_score": 0.8,
+        "wcag_judge_comment": "The aria-label attribute provides an accessible name for the button, and the styling changes improve visual contrast to meet WCAG guidelines.",
+        "cls": 0.02,
+        "bounding_box_drift": 0.015
+      }
+    }
+  ]
+}

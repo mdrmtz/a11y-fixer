@@ -1,0 +1,33 @@
+{
+  "summary": {
+    "total_cases": 1,
+    "violation_clearance_rate": 1.0,
+    "human_escalation_rate": 0.0,
+    "error_rate": 0.0,
+    "mean_latency_seconds": 85.8936252919957,
+    "brier_score": 0.0025000000000000044,
+    "expected_calibration_error": 0.050000000000000044,
+    "by_rule": {
+      "button-name": {
+        "total": 1,
+        "cleared": 1
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-21",
+      "rule": "button-name",
+      "page": "/pricing",
+      "route": "auto",
+      "rubric_score": 19.0,
+      "cleared": true,
+      "latency_seconds": 85.8936252919957,
+      "error": null,
+      "scoring_details": null,
+      "delivered": false,
+      "pull_request_url": null,
+      "pull_request_number": null
+    }
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "summary": {
+    "total_cases": 22,
+    "violation_clearance_rate": 0.0,
+    "human_escalation_rate": 0.4090909090909091,
+    "error_rate": 0.4090909090909091,
+    "mean_latency_seconds": 63.59977936941405,
+    "brier_score": 0.07552727272727273,
+    "expected_calibration_error": 0.1290909090909091,
+    "by_rule": {
+      "html-has-lang": {
+        "total": 11,
+        "cleared": 0
+      },
+      "color-contrast": {
+        "total": 2,
+        "cleared": 0
+      },
+      "image-alt": {
+        "total": 5,
+        "cleared": 0
+      },
+      "button-name": {
+        "total": 1,
+        "cleared": 0
+      },
+      "link-name": {
+        "total": 3,
+        "cleared": 0
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-01",
+      "rule": "html-has-lang",
+      "page": "/",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 77.00093854099396,
+      "error": "no structured response produced after retries"
+    },
+    {
+      "case_id": "case-02",
+      "rule": "html-has-lang",
+      "page": "/home",
+      "route": "auto",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 47.05136633300572,
+      "error": null
+    },
+    {
+      "case_id": "case-03",
+      "rule": "color-contrast",
+      "page": "/product",
+      "route": "auto",
+      "rubric_score": 4.0,
+      "cleared": false,
+      "latency_seconds": 46.38423704201705,
+      "error": null
+    },
+    {
+      "case_id": "case-04",
+      "rule": "html-has-lang",
+      "page": "/product",
+      "route": "auto",
+      "rubric_score": 1.0,
+      "cleared": false,
+      "latency_seconds": 16.065596833010204,
+      "error": null
+    },
+    {
+      "case_id": "case-05",
+      "rule": "html-has-lang",
+      "page": "/case-studies",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 110.03746104199672,
+      "error": "no structured response produced after retries"
+    },
+    {
+      "case_id": "case-06",
+      "rule": "image-alt",
+      "page": "/case-studies",
+      "route": "auto",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 109.68194241600577,
+      "error": null
+    },
+    {
+      "case_id": "case-07",
+      "rule": "image-alt",
+      "page": "/case-studies",
+      "route": "auto",
+      "rubric_score": 11.0,
+      "cleared": false,
+      "latency_seconds": 63.32795870798873,
+      "error": null
+    },
+    {
+      "case_id": "case-08",
+      "rule": "image-alt",
+      "page": "/case-studies",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 125.1914321250224,
+      "error": "no structured response produced after retries"
+    },
+    {
+      "case_id": "case-09",
+      "rule": "html-has-lang",
+      "page": "/docs",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 185.15614370800904,
+      "error": "case timed out after 120s"
+    },
+    {
+      "case_id": "case-10",
+      "rule": "html-has-lang",
+      "page": "/careers",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 105.59181458401144,
+      "error": "no structured response produced after retries"
+    },
+    {
+      "case_id": "case-11",
+      "rule": "button-name",
+      "page": "/blog",
+      "route": "auto",
+      "rubric_score": 10.0,
+      "cleared": false,
+      "latency_seconds": 51.738369042024715,
+      "error": null
+    },
+    {
+      "case_id": "case-12",
+      "rule": "html-has-lang",
+      "page": "/blog",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 28.49423999999999,
+      "error": "no structured response produced after retries"
+    },
+    {
+      "case_id": "case-13",
+      "rule": "link-name",
+      "page": "/blog",
+      "route": "auto",
+      "rubric_score": 18.0,
+      "cleared": false,
+      "latency_seconds": 8.839606459019706,
+      "error": null
+    },
+    {
+      "case_id": "case-14",
+      "rule": "html-has-lang",
+      "page": "/pricing",
+      "route": "auto",
+      "rubric_score": 1.0,
+      "cleared": false,
+      "latency_seconds": 21.916874999995343,
+      "error": null
+    },
+    {
+      "case_id": "case-15",
+      "rule": "html-has-lang",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 125.77719708401128,
+      "error": "case timed out after 120s"
+    },
+    {
+      "case_id": "case-16",
+      "rule": "image-alt",
+      "page": "/about",
+      "route": "auto",
+      "rubric_score": 1.0,
+      "cleared": false,
+      "latency_seconds": 10.81308058401919,
+      "error": null
+    },
+    {
+      "case_id": "case-17",
+      "rule": "image-alt",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 84.66006650001509,
+      "error": "no structured response produced after retries"
+    },
+    {
+      "case_id": "case-18",
+      "rule": "color-contrast",
+      "page": "/contact",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.01660220799386,
+      "error": "case timed out after 120s"
+    },
+    {
+      "case_id": "case-19",
+      "rule": "html-has-lang",
+      "page": "/contact",
+      "route": "auto",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 12.457367875002092,
+      "error": null
+    },
+    {
+      "case_id": "case-20",
+      "rule": "link-name",
+      "page": "/contact",
+      "route": "auto",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 9.329517833975842,
+      "error": null
+    },
+    {
+      "case_id": "case-21",
+      "rule": "link-name",
+      "page": "/contact",
+      "route": "auto",
+      "rubric_score": 0.8,
+      "cleared": false,
+      "latency_seconds": 29.427295542001957,
+      "error": null
+    },
+    {
+      "case_id": "case-22",
+      "rule": "html-has-lang",
+      "page": "/status",
+      "route": "auto",
+      "rubric_score": 10.0,
+      "cleared": false,
+      "latency_seconds": 10.236036666989094,
+      "error": null
+    }
+  ]
+}

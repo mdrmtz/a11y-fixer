@@ -1,0 +1,96 @@
+{
+  "summary": {
+    "total_cases": 5,
+    "violation_clearance_rate": 0.6,
+    "human_escalation_rate": 0.6,
+    "error_rate": 0.4,
+    "mean_latency_seconds": 284.38605650858955,
+    "brier_score": 0.0005000000000000009,
+    "expected_calibration_error": 0.009999999999999964,
+    "by_rule": {
+      "color-contrast": {
+        "total": 1,
+        "cleared": 1
+      },
+      "image-alt": {
+        "total": 1,
+        "cleared": 0
+      },
+      "html-has-lang": {
+        "total": 1,
+        "cleared": 1
+      },
+      "link-name": {
+        "total": 1,
+        "cleared": 1
+      },
+      "button-name": {
+        "total": 1,
+        "cleared": 0
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-02",
+      "rule": "color-contrast",
+      "page": "/about",
+      "route": "auto",
+      "rubric_score": 19.0,
+      "cleared": true,
+      "latency_seconds": 881.2230094589759,
+      "error": null,
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-07",
+      "rule": "image-alt",
+      "page": "/blog",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 207.77398974998505,
+      "error": "wcag_judge_score must be in [0, 1], got -1.0",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-09",
+      "rule": "html-has-lang",
+      "page": "/",
+      "route": "human",
+      "rubric_score": 20.0,
+      "cleared": true,
+      "latency_seconds": 7.97874237500946,
+      "error": null,
+      "scoring_details": {
+        "build_error": null,
+        "ast_error": null,
+        "wcag_judge_confidence": 100,
+        "visual_error": null,
+        "fast_track": "html_lang_applier"
+      }
+    },
+    {
+      "case_id": "case-10",
+      "rule": "link-name",
+      "page": "/features",
+      "route": "auto",
+      "rubric_score": 20.0,
+      "cleared": true,
+      "latency_seconds": 192.16243395899073,
+      "error": null,
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-21",
+      "rule": "button-name",
+      "page": "/pricing",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 132.79210699998657,
+      "error": "unhandled errors in a TaskGroup (1 sub-exception)",
+      "scoring_details": null
+    }
+  ]
+}

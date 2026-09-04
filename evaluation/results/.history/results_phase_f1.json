@@ -1,0 +1,41 @@
+{
+  "summary": {
+    "total_cases": 2,
+    "violation_clearance_rate": 0.0,
+    "human_escalation_rate": 0.5,
+    "error_rate": 0.5,
+    "mean_latency_seconds": 223.25033537499257,
+    "brier_score": 0.42781250000000004,
+    "expected_calibration_error": 0.4625,
+    "by_rule": {
+      "image-alt": {
+        "total": 2,
+        "cleared": 0
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "case-16",
+      "rule": "image-alt",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 120.76382162500522,
+      "error": "unhandled errors in a TaskGroup (1 sub-exception)",
+      "scoring_details": null
+    },
+    {
+      "case_id": "case-17",
+      "rule": "image-alt",
+      "page": "/about",
+      "route": "auto",
+      "rubric_score": 18.5,
+      "cleared": false,
+      "latency_seconds": 325.7368491249799,
+      "error": null,
+      "scoring_details": null
+    }
+  ]
+}

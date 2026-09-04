@@ -1,0 +1,29 @@
+{
+  "summary": {
+    "total_cases": 1,
+    "violation_clearance_rate": 0.0,
+    "human_escalation_rate": 1.0,
+    "error_rate": 1.0,
+    "mean_latency_seconds": 2.804758000005677,
+    "brier_score": 0.0,
+    "expected_calibration_error": 0.0,
+    "by_rule": {
+      "image-alt": {
+        "total": 1,
+        "cleared": 0
+      }
+    }
+  },
+  "cases": [
+    {
+      "case_id": "test-image-alt",
+      "rule": "image-alt",
+      "page": "/about",
+      "route": "human",
+      "rubric_score": 0.0,
+      "cleared": false,
+      "latency_seconds": 2.804758000005677,
+      "error": "no structured response produced after retries"
+    }
+  ]
+}
