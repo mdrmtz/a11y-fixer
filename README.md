@@ -16,38 +16,27 @@
 
 **Final report & evaluation results:** see the final capstone report in [`cmu-capstone`](https://github.com/mdrmtz/cmu-capstone). **Live docs & project chat:** https://mdrmtz.mintlify.site
 
-### Final system architecture
+### Architecture
 
-```mermaid
-flowchart TD
-    classDef input fill:#1E3A8A,stroke:#0B1F4E,color:#FFFFFF,stroke-width:2px
-    classDef agent fill:#6D28D9,stroke:#3B0F91,color:#FFFFFF,stroke-width:2px
-    classDef eval fill:#0F766E,stroke:#0B4F49,color:#FFFFFF,stroke-width:2px
-    classDef auto fill:#15803D,stroke:#0B4A20,color:#FFFFFF,stroke-width:2px
-    classDef human fill:#C2410C,stroke:#7C2D0A,color:#FFFFFF,stroke-width:2px
-    classDef guard fill:#B91C1C,stroke:#7F1D1D,color:#FFFFFF,stroke-width:2px,stroke-dasharray: 4 3
-    classDef store fill:#334155,stroke:#1E293B,color:#FFFFFF,stroke-width:2px
+![The A11y Fixer -- high-level architecture](architecture-high-level.png)
 
-    A[["Target site<br/>repo or live URL"]]:::input --> B["Deterministic crawler<br/>Playwright MCP &middot; no LLM"]:::input
-    B --> C["axe-core audit<br/>real subprocess"]:::input
-    C --> D["Compliance Planner<br/>live wcag-mcp &middot; MMR top-3"]:::agent
-    D --> E["Codebase Compiler<br/>angular-cli MCP &middot; AST edit"]:::agent
-    E --> F{{"RubricMiddleware<br/>0-20 score &middot; retry x3"}}:::eval
-    F -- "score below 18 or build fails" --> E
-    F -- "score 18+ and verified build" --> G["ViolationState machine<br/>NEW to PR_OPEN/HITL_QUEUED to MERGED"]:::eval
-    G --> H{{"Risk-calibrated router"}}:::eval
-    H -- "auto" --> I["Real GitHub PR<br/>+ auto_merge_pr()"]:::auto
-    H -- "human" --> J["hitl_queue/ ticket<br/>persisted, file-backed"]:::human
-    J --> K["dashboard-app<br/>Bounded Decider UI"]:::human
-    K -- "reject + constraint" --> L[("wiki/lessons/<br/>institutional memory")]:::store
-    L -. "feeds future runs" .-> D
-    K -- "approve" --> I
+The end-to-end pipeline: discovery/audit, the per-violation gate, the deterministic
+`html-has-lang` fast-track, the AI agent pipeline, guardrails and risk routing, and
+delivery (automated or human-reviewed). Full legend and diagram source:
+[`1-Architecture-High-Level.md`](1-Architecture-High-Level.md). For the complete
+diagram, including guardrail internals and delivery plumbing, see
+[`ARCHITECTURE.md`](ARCHITECTURE.md).
 
-    M["Guardrails - schema + path allowlist &middot;<br/>P(IK) >= 0.75 &middot; ARIA lexicon &middot;<br/>AST verify &middot; interrupt_on every write"]:::guard
-    M -.-> D
-    M -.-> E
-    M -.-> F
-```
+### AI orchestration
+
+The AI agent pipeline above in isolation -- `compliance_planner` -&gt; `codebase_compiler`
+-&gt; `qa_critic`, plus the ad hoc `audit_crawler` subagent -- with no CLI, guardrail, or
+delivery code around it. This is what `deep_agent.py`'s `create_deep_agent()` graph
+actually runs, once per violation:
+
+![The A11y Fixer -- AI orchestration graph](architecture-ai-orchestration.png)
+
+Full legend and diagram source: [`3-Architecture-AI-Orchestration-Only.md`](3-Architecture-AI-Orchestration-Only.md).
 
 
 ---
