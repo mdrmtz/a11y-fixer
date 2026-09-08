@@ -186,6 +186,7 @@ async def _audit_live_url(url: str) -> dict:
 
     routes = await audit_crawler.discover_routes(url)
     urls = [urljoin(url, route) for route in routes] if routes else [url]
+    print(f"auditing {len(urls)} url(s): {urls}")  # noqa: T201 - CLI output
     runner = AxeAuditRunner(fixture_path=config.repo_root())
     return runner.audit_urls(urls)
 

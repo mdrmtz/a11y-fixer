@@ -5,10 +5,10 @@ list going stale as the fixture grows.
 
 from __future__ import annotations
 
+import re
+from urllib.parse import urljoin, urlparse
+
 from deepagents import SubAgent
-from langchain.agents.structured_output import ToolStrategy
-from langgraph.checkpoint.memory import InMemorySaver
-from pydantic import BaseModel
 
 from a11y_fixer import config
 from a11y_fixer.adapters.audit_runner import AxeAuditRunner
@@ -27,6 +27,11 @@ FALLBACK_PAGES: tuple[str, ...] = ("/",)
 # A narrow, bounded discovery task (navigate, snapshot, extract hrefs) doesn't
 # need, and shouldn't cost, the paid model the rest of the agent uses by default.
 DEFAULT_CRAWLER_MODEL = "openrouter:openrouter/free"
+
+# Safety cap on discover_routes()'s own crawl - bounds worst-case time/cost
+# against a site with far more pages than the fixture's, without needing a
+# CLI flag for what's still a niche tuning knob.
+DEFAULT_MAX_PAGES = 20
 
 SYSTEM_PROMPT = """You are the Audit Crawler for The A11y Fixer.
 
@@ -59,6 +64,11 @@ when discovery comes back empty.
 async def build(model: str = DEFAULT_CRAWLER_MODEL) -> SubAgent:
     """Resolve this subagent's MCP tools and return its `SubAgent` spec.
 
+    Kept as an LLM-driven, on-demand subagent the main agent can delegate to
+    mid-task (e.g. "did my fix break navigation?") - a genuinely different
+    job from `discover_routes()` below, which is the deterministic,
+    no-LLM pre-audit crawl.
+
     A `SubAgent` dict's own `"model"` key overrides the top-level model for
     just this subagent (per `deepagents.graph`'s `spec.get("model", model)`).
     """
@@ -73,70 +83,113 @@ async def build(model: str = DEFAULT_CRAWLER_MODEL) -> SubAgent:
     )
 
 
-class DiscoveredRoutes(BaseModel):
-    """Structured output for the standalone discovery agent below - replaces
-    the free-form "return the discovered route list" prose with a real,
-    validated data structure.
+_EXTRACT_LINKS_JS = "() => Array.from(document.querySelectorAll('a[href]')).map(a => a.href)"
+
+_URL_RE = re.compile(r'https?://[^\s"\'\]\\]+')
+
+
+def _origin_of(url: str) -> str:
+    parsed = urlparse(url)
+    return f"{parsed.scheme}://{parsed.netloc}"
+
+
+def _path_of(url: str) -> str:
+    return urlparse(url).path or "/"
+
+
+def _extract_urls_from_tool_result(result: object) -> list[str]:
+    """`browser_evaluate`'s MCP result shape isn't pinned to one exact
+    format across `@playwright/mcp` versions (this project always pulls
+    `@latest`) - it may come back as a raw string, a JSON-array-shaped
+    string, or wrapped in explanatory text around the JS return value.
+    Scan for every http(s) URL substring rather than assuming one exact
+    parse, so a harmless format change upstream degrades to "found fewer
+    links this pass" instead of an exception.
     """
+    text = result if isinstance(result, str) else str(result)
+    return _URL_RE.findall(text)
 
-    routes: list[str]
 
+async def discover_routes(base_url: str, *, max_pages: int = DEFAULT_MAX_PAGES) -> list[str]:
+    """Deterministic same-origin crawl via the Playwright MCP browser - no
+    LLM in the loop, no model call, nothing to hallucinate.
 
-async def discover_routes(
-    base_url: str, *, model: str = DEFAULT_CRAWLER_MODEL
-) -> list[str]:
-    """Run this module's own prompt/tools as a standalone single-agent
-    graph and return the routes it discovers - no subagent delegation is
-    needed for a one-shot discovery task.
+    Breadth-first: navigate to `base_url`, extract every `<a href>` on the
+    page via `browser_evaluate`, queue up same-origin links not yet seen,
+    and repeat (bounded by `max_pages`) until the queue drains or the cap
+    is hit. Returns every path actually visited.
 
-    Never raises: any failure (MCP unavailable, model error, malformed
-    output) returns an empty list so callers can fall back to a known-good
+    Replaces the earlier LLM-driven version of this function: that agent
+    decided ad hoc whether/how to call `browser_evaluate`, and it silently
+    coming back empty (MCP hiccup, model error, or a route genuinely not
+    linked from the start page) meant a live `--url` audit could end up
+    scanning only the single page it was given, with no visible sign
+    discovery had failed (case-12, 2026-09-04: auditing
+    https://hallucinate.netlify.app/ this way returned exactly 1 page).
+
+    Never raises: any failure - MCP unavailable, a tool call erroring, an
+    unexpected result shape - returns whatever routes were found before the
+    failure (or an empty list) so callers can fall back to a known-good
     page list instead of blocking the audit outright.
     """
-    from deepagents import (
-        create_deep_agent,
-    )  # noqa: PLC0415 - deferred: keeps module import side-effect-free for tests
-
-    config.configure_model_providers()
+    routes: set[str] = set()
     try:
         tools = await aget_tools(["playwright"])
-        graph = create_deep_agent(
-            model=model,
-            tools=tools,
-            system_prompt=SYSTEM_PROMPT,
-            skills=[config.to_virtual_path(config.resolve_skill("playwright-mcp"))],
-            response_format=ToolStrategy(schema=DiscoveredRoutes),
-            checkpointer=InMemorySaver(),
+        by_name = {tool.name: tool for tool in tools}
+        navigate = by_name.get("browser_navigate")
+        evaluate = by_name.get("browser_evaluate")
+        if navigate is None or evaluate is None:
+            print(  # noqa: T201 - CLI output: makes a silent [] fallback visible
+                "route discovery: browser_navigate/browser_evaluate not found "
+                f"among Playwright MCP tools ({sorted(by_name) or 'none'}) - crawl skipped"
+            )
+            return []
+
+        origin = _origin_of(base_url)
+        queue: list[str] = [base_url]
+        print(f"route discovery: crawling {base_url} (max {max_pages} pages)")  # noqa: T201
+
+        while queue and len(routes) < max_pages:
+            url = queue.pop(0)
+            path = _path_of(url)
+            if path in routes:
+                continue
+            routes.add(path)
+
+            await navigate.ainvoke({"url": url})
+            result = await evaluate.ainvoke({"function": _EXTRACT_LINKS_JS})
+            new_links = 0
+            for href in _extract_urls_from_tool_result(result):
+                absolute = urljoin(url, href)
+                if _origin_of(absolute) != origin:
+                    continue
+                if _path_of(absolute) not in routes:
+                    queue.append(absolute)
+                    new_links += 1
+            print(  # noqa: T201 - CLI output: per-page crawl progress
+                f"  [{len(routes)}/{max_pages}] visited {path} - "
+                f"{new_links} new same-origin link(s) found ({len(queue)} queued)"
+            )
+
+        close = by_name.get("browser_close")
+        if close is not None:
+            await close.ainvoke({})
+
+        hit_cap = bool(queue) and len(routes) >= max_pages
+        print(  # noqa: T201 - CLI output: the actual verification line - proves
+            # more than "/" was crawled (or explains why not)
+            f"route discovery: found {len(routes)} page(s): {sorted(routes)}"
+            + (" (stopped early: max_pages reached)" if hit_cap else "")
         )
-        result = await graph.ainvoke(
-            {
-                "messages": [
-                    {
-                        "role": "user",
-                        "content": f"Discover every route in the running app at {base_url}.",
-                    }
-                ]
-            },
-            config={
-                "configurable": {
-                    "thread_id": "audit-crawler-discovery",
-                    "recursion_limit": 30,
-                }
-            },
-        )
-        response = result.get("structured_response")
-        return list(response.routes) if response else []
-    except (
-        Exception
-    ):  # noqa: BLE001 - discovery failing must not block the caller's fallback path
-        return []
+    except Exception as exc:  # noqa: BLE001 - discovery failing must not block the caller's fallback path
+        print(f"route discovery failed ({exc!r}) - falling back")  # noqa: T201
+
+    return sorted(routes)
 
 
-async def discover_and_audit(
-    runner: AxeAuditRunner, *, model: str = DEFAULT_CRAWLER_MODEL
-) -> dict:
+async def discover_and_audit(runner: AxeAuditRunner) -> dict:
     """Route-aware drop-in replacement for `runner.run()`: start the server,
-    discover real routes via this module's own crawler prompt, run one
+    discover real routes via this module's deterministic crawler, run one
     combined axe-core scan across all of them, then always stop the server.
 
     Falls back to `FALLBACK_PAGES` (just "/") if discovery finds nothing - a
@@ -147,7 +200,7 @@ async def discover_and_audit(
     try:
         # http:// is correct here: `ng serve` is a local dev server with no TLS.
         base_url = f"http://{runner.host}:{runner.port}"  # noqa: S310
-        routes = await discover_routes(base_url, model=model)
+        routes = await discover_routes(base_url)
         if not routes:
             print(  # noqa: T201
                 "route discovery found nothing - falling back to "

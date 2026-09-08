@@ -80,42 +80,129 @@ async def test_audit_crawler_spec_model_is_overridable() -> None:
     assert spec["model"] == "ollama:llama3.1"
 
 
-class _FakeDiscoveryGraph:
-    def __init__(self, structured_response: object) -> None:
-        self._structured_response = structured_response
+class _FakeMCPTool:
+    """A minimal stand-in for a `langchain_mcp_adapters` tool: real ones
+    expose `.name` and an async `.ainvoke(args)` - that's the entire
+    surface `discover_routes()` uses, so that's all this fakes."""
 
-    async def ainvoke(self, *_args: object, **_kwargs: object) -> dict:
-        return {"structured_response": self._structured_response}
+    def __init__(self, name: str, handler) -> None:  # noqa: ANN001
+        self.name = name
+        self._handler = handler
+
+    async def ainvoke(self, args: dict) -> object:
+        return self._handler(args)
 
 
-async def test_discover_routes_returns_the_discovered_list(monkeypatch: pytest.MonkeyPatch) -> None:
-    fake_graph = _FakeDiscoveryGraph(audit_crawler.DiscoveredRoutes(routes=["/", "/about"]))
-    monkeypatch.setattr("deepagents.create_deep_agent", lambda **_kwargs: fake_graph)
+def _fake_playwright_site(pages: dict[str, list[str]]) -> list[_FakeMCPTool]:
+    """Builds fake `browser_navigate`/`browser_evaluate` tools backing a
+    tiny in-memory site: `pages` maps each URL to the list of hrefs its
+    page exposes. `browser_navigate` just remembers "where we are";
+    `browser_evaluate` returns that page's hrefs, mirroring
+    `_EXTRACT_LINKS_JS`'s real shape (a JS array of absolute URLs, which
+    the MCP tool serializes to a string on the way back).
+    """
+    state = {"current": None}
 
-    routes = await audit_crawler.discover_routes("http://127.0.0.1:4200")
+    def _navigate(args: dict) -> str:
+        state["current"] = args["url"]
+        return "ok"
+
+    def _evaluate(_args: dict) -> str:
+        return str(pages.get(state["current"], []))
+
+    return [
+        _FakeMCPTool("browser_navigate", _navigate),
+        _FakeMCPTool("browser_evaluate", _evaluate),
+        _FakeMCPTool("browser_close", lambda _args: "ok"),
+    ]
+
+
+async def test_discover_routes_crawls_same_origin_links_breadth_first(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    site = {
+        "http://127.0.0.1:4200/": ["http://127.0.0.1:4200/about", "http://127.0.0.1:4200/"],
+        "http://127.0.0.1:4200/about": ["http://127.0.0.1:4200/contact"],
+        "http://127.0.0.1:4200/contact": [],
+    }
+    fake_tools = AsyncMock(return_value=_fake_playwright_site(site))
+    monkeypatch.setattr(audit_crawler, "aget_tools", fake_tools)
+
+    routes = await audit_crawler.discover_routes("http://127.0.0.1:4200/")
+
+    assert routes == ["/", "/about", "/contact"]
+
+
+async def test_discover_routes_drops_external_links(monkeypatch: pytest.MonkeyPatch) -> None:
+    site = {
+        "http://127.0.0.1:4200/": [
+            "http://127.0.0.1:4200/about",
+            "https://external.example.com/somewhere",
+        ],
+        "http://127.0.0.1:4200/about": [],
+    }
+    fake_tools = AsyncMock(return_value=_fake_playwright_site(site))
+    monkeypatch.setattr(audit_crawler, "aget_tools", fake_tools)
+
+    routes = await audit_crawler.discover_routes("http://127.0.0.1:4200/")
 
     assert routes == ["/", "/about"]
 
 
-async def test_discover_routes_returns_empty_list_when_no_structured_response(monkeypatch: pytest.MonkeyPatch) -> None:
-    fake_graph = _FakeDiscoveryGraph(None)
-    monkeypatch.setattr("deepagents.create_deep_agent", lambda **_kwargs: fake_graph)
+async def test_discover_routes_respects_max_pages(monkeypatch: pytest.MonkeyPatch) -> None:
+    # A long chain: / -> /1 -> /2 -> /3 ... each page links only to the next.
+    site = {f"http://127.0.0.1:4200/{i}" if i else "http://127.0.0.1:4200/": [
+        f"http://127.0.0.1:4200/{i + 1}"
+    ] for i in range(10)}
+    fake_tools = AsyncMock(return_value=_fake_playwright_site(site))
+    monkeypatch.setattr(audit_crawler, "aget_tools", fake_tools)
 
-    routes = await audit_crawler.discover_routes("http://127.0.0.1:4200")
+    routes = await audit_crawler.discover_routes("http://127.0.0.1:4200/", max_pages=3)
+
+    assert len(routes) == 3
+
+
+async def test_discover_routes_returns_empty_list_when_playwright_tools_missing(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    fake_tools = AsyncMock(return_value=[_FakeMCPTool("some_other_tool", lambda _a: "x")])
+    monkeypatch.setattr(audit_crawler, "aget_tools", fake_tools)
+
+    routes = await audit_crawler.discover_routes("http://127.0.0.1:4200/")
 
     assert routes == []
 
 
 async def test_discover_routes_never_raises_on_failure(monkeypatch: pytest.MonkeyPatch) -> None:
-    def _raise(**_kwargs: object) -> None:
+    async def _raise(*_args: object, **_kwargs: object) -> None:
         msg = "boom"
         raise RuntimeError(msg)
 
-    monkeypatch.setattr("deepagents.create_deep_agent", _raise)
+    monkeypatch.setattr(audit_crawler, "aget_tools", _raise)
 
-    routes = await audit_crawler.discover_routes("http://127.0.0.1:4200")
+    routes = await audit_crawler.discover_routes("http://127.0.0.1:4200/")
 
     assert routes == []
+
+
+async def test_discover_routes_no_llm_or_model_calls_involved(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The whole point of this rewrite: verify no `create_deep_agent` (or
+    any model call) is invoked anywhere in `discover_routes()` - it's
+    pure MCP tool calls now, deterministic, zero model cost.
+    """
+    site = {"http://127.0.0.1:4200/": []}
+    fake_tools = AsyncMock(return_value=_fake_playwright_site(site))
+    monkeypatch.setattr(audit_crawler, "aget_tools", fake_tools)
+
+    def _fail_if_called(**_kwargs: object) -> None:
+        msg = "discover_routes() must not call create_deep_agent anymore"
+        raise AssertionError(msg)
+
+    monkeypatch.setattr("deepagents.create_deep_agent", _fail_if_called)
+
+    routes = await audit_crawler.discover_routes("http://127.0.0.1:4200/")
+
+    assert routes == ["/"]
 
 
 async def test_discover_and_audit_uses_discovered_routes(monkeypatch: pytest.MonkeyPatch) -> None:
